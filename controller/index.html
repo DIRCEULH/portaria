@@ -1,0 +1,322 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="../Semantic/semantic.min.css">
+  <link rel="stylesheet" href="../Semantic/jquery/jquery.datetimepicker.min.css">
+  <link rel="stylesheet" href="../Semantic/jquery-ui.css">
+  <link rel="stylesheet" href="../Semantic/jquery.modal.css" />
+  <script src="../functions/cpfCnpjValidate.js"></script>
+  <script src="../functions/encodeDecode.js"></script>
+  <script src="../semantic/jquery.js" type="text/javascript"></script>
+  <script src="../semantic/jquery/jquery.js" type="text/javascript"></script>
+  <script src="../Semantic/jquery/datetimepicker.js"></script>
+  <script src="../semantic/semantic.min.js"></script>
+  <script type="text/javascript" src="../semantic/jquery-ui.js"></script>
+  <script type="text/javascript" src="../ServiceJs/ClientesService.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+  <script src="../semantic/jquery.modal.js"></script>
+  <script src="../Semantic/jquery/jquery.datetimepicker.full.js"></script>
+
+</head>
+
+<body>
+
+  <div class="ui main fluid container">
+
+    <div id="noprint" class="ui menu big">
+      <a style="background-color: #fff; border: solid silver 1px; " class="active item"
+        href="#">
+        <img style="width:85px; height:32px;" src="#" alt=" ">
+      </a>
+      <a onclick="openModalCustomers()" class="item ">
+        <i class="folder open icon"></i> CADASTRO DO VISITANTE
+      </a>
+      <a style=" margin-top:5" onclick="openModalAttendant()" class="item atendente">
+        <i class="folder open icon"></i> CADASTRO DO ATENDENTE
+      </a>
+      <a class="item  ">
+        <i class="user icon"></i><input disabled id="logado" />
+      </a>
+      <a class="item " href="login.html">
+        <i class="plane icon"></i> Sair
+      </a>
+      <a style=" width:100%; display:inline; float: left; "></a>
+      <a style="background-color: #fff; border: solid silver 1px;" class="active item  "
+        href="#" >
+        <img style="width:85px; height:32px;" src="#" alt=" " height="30" width="150%">
+      </a>
+    </div>
+
+    <div id="noprint" class="ui menu">
+
+      <div class="left menu select_visitors">
+        <div class="item">
+          <div class="ui transparent icon input">
+            <div class="field">
+              <select onchange="myFunctionSelect()" id="select" class="select ui search dropdown"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="left menu">
+        <div class="item">
+          <div class="ui transparent icon input">
+            <i class="calendar icon"></i>
+            <input onchange="atualizar()" id="datepicker" type="text" placeholder="Filtrar Data do registro...">
+          </div>
+        </div>
+      </div>
+
+      <div class="left menu">
+        <div class="item">
+          <button onclick="window.print('visitantes_table')" class="ui button">
+            <i class="print icon"></i> Imprimir
+          </button>
+        </div>
+      </div>
+
+      <div class="right menu">
+        <div class="item">
+          <div class="ui transparent icon input">
+            <input id="search-input" onkeyup="myFunctionSearch()" type="text" placeholder="Buscar pelo cpf/cnpj...">
+            <i class="search link icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form autocomplete="off" style="display: none; position : relative; width: 600px;" id="modalInserAtendente"
+      class="ui form modalInserAtendente">
+
+      <div class="fields">
+
+        <div class="ui large icon input field">
+          <i class="user icon"></i>
+          <input id="matricula_atendente" type="text" name="shipping[first-name]" placeholder="Matricula">
+
+        </div>
+
+        <div class="ui large icon input field">
+          <i class="tags icon"></i>
+          <input id="nome_atendente" type="text" name="shipping[first-name]" placeholder="Nome do Atendente">
+        </div>
+
+      </div>
+
+      <div class="fields">
+
+        <div class="field ">
+          <div class="ui pointing red basic label matricula_atendente">
+            Campo matricula_atendente obrigatório!
+          </div>
+        </div>
+
+        <div class="field ">
+          <div class="ui pointing red basic label nome_atendente">
+            Campo nome_atendente obrigatório!
+          </div>
+        </div>
+
+      </div>
+
+      <div onclick="saveAtendenteButton()" class="ui button green" tabindex="0"><i class="save icon"></i> Salvar</div>
+
+    </form>
+
+    <form autocomplete="off" style="display: none; position : relative; width: 400px;" id="modalSaidaVisitante"
+      class="ui form modalSaidaVisitante">
+
+      <div class="fields">
+
+        <div class="field">
+          <input disabled id="id_visitante" type="text" name="shipping[first-name]" placeholder="Codigo">
+        </div>
+
+        <div class="field">
+          <input id="data_saida" type="text" placeholder="Data saida">
+          <div class="ui pointing red basic label data_saida">
+            Campo Saida obrigatório!
+          </div>
+        </div>
+
+      </div>
+
+      <div onclick="updateVisitanteButton()" class="ui button green" tabindex="0"><i class="save icon"></i> Salvar</div>
+
+    </form>
+
+
+
+
+
+    <form autocomplete="off" style="display: none; position : relative; width: 600px;" id="modalInserCostumer"
+      class="ui form modalInserCostumer">
+
+      <div class="field ">
+        <label></label>
+        <div class="fields">
+          <!-- <div class="field">
+            <input disabled id="id_visitante" type="text" name="shipping[first-name]" placeholder="000000">
+          </div> -->
+
+          
+          <div style="width:35%;" class="ui floating dropdown labeled search icon button">
+            <i class="filter icon"></i>
+            <span class="text">Filtrar</span>
+            <div id="selectFilterVisitors" class=" menu selectFilterVisitors" >
+             
+            </div>
+          </div>
+
+          <!-- <div class="left menu select_visitors_filter">
+            <div class="item">
+              <div class="ui transparent icon input">
+                <div class="field">
+                  <select onchange="myFunctionFiltervisitant()" id="selectFilterVisitors" class="selectFilterVisitors ui  dropdown">
+                   
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="field">
+            <input onchange="validaCpfCnpj() " id="cpf_cnpj" type="text" name="shipping[first-name]"
+              placeholder="Cpf/Cnpj"  oninput="this.value = this.value.replace(/\D/g, '')" >
+            <div class="ui pointing red basic label cpf_cnpj">
+              Campo CPF/CNPJ obrigatório ou inválido!
+            </div>
+          </div>
+
+
+          <div class="field">
+            <input id="nome_visitante" type="text" name="shipping[first-name]" placeholder="Nome">
+            <div class="ui pointing red basic label nome_visitante">
+              Campo Nome obrigatório!
+            </div>
+          </div>
+
+        </div>
+
+        <div class="fields ">
+          <div class="field">
+            <input id="data_entrada" type="text" placeholder="Data entrada">
+            <div class="ui pointing red basic label data_entrada">
+              Campo entrada obrigatório!
+            </div>
+          </div>
+
+          <!-- <div class="field">
+            <input id="data_saida" type="text" placeholder="Data saida">
+            <div class="ui pointing red basic label data_saida">
+              Campo Saida obrigatório!
+            </div>
+          </div> -->
+
+          <div class="field">
+            <input id="placa_veiculo" type="text" placeholder="Placa">
+            <div class="ui pointing red basic label placa_veiculo">
+              Campo Placa obrigatório!
+            </div>
+          </div>
+        </div>
+
+        <div class="fields ">
+          <div class="field">
+            <input id="destino" type="text" placeholder="Destino ">
+            <div class="ui pointing red basic label destino">
+              Campo Destino obrigatório!
+            </div>
+          </div>
+          <div class="field">
+            <select style="width:170px;" id="atendente" class="ui dropdown attendants"></select>
+            <div class="ui pointing red basic label atendente">
+              Campo Atendente obrigatório!
+            </div>
+          </div>
+          <div class="field">
+            <input id="empresa" type="text" placeholder="Empresa">
+            <div class="ui pointing red basic label empresa">
+              Campo Empresa obrigatório!
+            </div>
+          </div>
+        </div>
+
+        <div class="ui form">
+          <div class="field">
+            <label>Observação:</label>
+            <textarea id="observacao" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div onclick="saveCustomersButton()" class="ui button green" tabindex="0"><i class="save icon"></i> Salvar</div>
+
+    </form>
+
+    <form style="display: none; position : relative; width: 300px;" id="modalDelete"
+      class="jquery-modal ui form modalInserCostumer">
+      <label>
+        <h4>Deseja realmente exluir o Item ?</h4>
+      </label><br>
+      <div class="ui small  input">
+        <input disabled id="id_delete" type="text" name="shipping" placeholder="Codigo">
+      </div>
+      <br></br>
+      <div onclick="deleteCustomers()" class="ui button green" tabindex="0"><i class="chevron circle down icon"></i> Sim
+      </div>
+      <a href="#close-modal" rel="modal:close" class="item ui button orange"><i class="circle notch icon"></i> Não</a>
+    </form>
+
+    <table id="visitantes_table" class="ui celled  table ">
+      <thead>
+        <tr>
+          <th class="collapsing center">ID</th>
+          <th class="collapsing">CPF/CNPJ</th>
+          <th class="collapsing">NOME</th>
+          <th class="collapsing">EMPRESA</th>
+          <th class="collapsing">DATA ENTRADA</th>
+          <th class="collapsing">DATA SAIDA</th>
+          <th class="collapsing">PLACA</th>
+          <th class="collapsing">DESTINO</th>
+          <th class="collapsing">ATENDENTE</th>
+          <th class="collapsing">OBS...</th>
+          <!-- <th class="collapsing"><i class="adjust icon "></i></th> -->
+          <!-- <th class="collapsing"><i class="adjust icon"></i></th> -->
+        </tr>
+      <tbody class="cutomers"></tbody>
+      </thead>
+    </table>
+    <div id="noprint"  class="ui pagination menu page"></div>
+
+    <div id="noprint" style="display: none; " class="ui icon message alert">
+      <i class="inbox icon"></i>
+      <div class="content">
+        <div class="header date_text">
+
+        </div>
+        <p>
+          <font color="red">Não foram encontrados dados neste período.</font>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <style>
+    @media print {
+      #noprint {
+        display: none;
+      }
+
+      body {
+        background: #fff;
+      }
+    }
+
+  </style>
+</body>
+
+</html>
